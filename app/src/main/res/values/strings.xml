@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">EventratingApp</string>
     <string name="action_settings">Settings</string>
+    <string name="did_you_like">Did you like the event?</string>
+    <string name="rate_submit">Submit</string>
+    <string name="rate_cancel">Cancel</string>
 </resources>

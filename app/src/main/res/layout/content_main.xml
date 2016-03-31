@@ -15,5 +15,127 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="Event rating app"
+        android:id="@+id/textView"
+        android:visibility="invisible" />
+
+    <include layout="@layout/voice_btn_layout"
+        android:visibility="visible"
+        android:id="@+id/include" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="80dp"
+        android:id="@+id/linearLayout">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:src="@drawable/recommendation_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/textViewTitle"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewTime"
+            android:textColor="@color/background_material_light"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/did_you_like"
+        android:id="@+id/textViewDidYouLike"
+        android:layout_below="@+id/linearLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewDidYouLike"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/linearLayoutStars"
+        android:layout_marginTop="24dp">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButtonStar1"
+            android:background="@null"
+            android:src="@drawable/star_filled"
+            android:onClick="onClickStar1" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButtonStar2"
+            android:background="@null"
+            android:src="@drawable/star_empty"
+            android:onClick="onClickStar2" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButtonStar3"
+            android:background="@null"
+            android:src="@drawable/star_empty"
+            android:onClick="onClickStar3" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButtonStar4"
+            android:background="@null"
+            android:src="@drawable/star_empty"
+            android:onClick="onClickStar4" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButtonStar5"
+            android:background="@null"
+            android:src="@drawable/star_empty"
+            android:onClick="onClickStar5" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayoutStars"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="64dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rate_submit"
+            android:id="@+id/buttonRateSubmit"
+            android:layout_margin="8dp"
+            android:onClick="onClickSubmit" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rate_cancel"
+            android:id="@+id/buttonRateCancel"
+            android:layout_margin="8dp"
+            android:onClick="onClickCancel" />
+    </LinearLayout>
+
+
 </RelativeLayout>
