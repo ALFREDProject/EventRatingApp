@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Map;
@@ -24,7 +25,7 @@ public class MainActivity extends AppActivity {
 
     private RecommendationManager recommendationManager;
 
-    private Boolean[] rate = {true, false, false, false, false};
+    private int currentRate = 3;
     private ImageButton[] stars;
 
     @Override
@@ -44,20 +45,23 @@ public class MainActivity extends AppActivity {
             }
         });
 
+        //GUI
+        setContentView(alfred.eu.eventratingapp.R.layout.activity_main);
+
         //Stars buttons
-        stars = new ImageButton[5];
+        stars  = new ImageButton[5];
         stars[0] = (ImageButton) findViewById(R.id.imageButtonStar1);
         stars[1] = (ImageButton) findViewById(R.id.imageButtonStar2);
         stars[2] = (ImageButton) findViewById(R.id.imageButtonStar3);
         stars[3] = (ImageButton) findViewById(R.id.imageButtonStar4);
         stars[4] = (ImageButton) findViewById(R.id.imageButtonStar5);
+        displayRate();
 
-
-        //Change your view contents. Note, the the button has to be included last.
-        setContentView(alfred.eu.eventratingapp.R.layout.activity_main);
-
+        //Alfred button
         circleButton = (CircleButton) findViewById(R.id.voiceControlBtn);
         circleButton.setOnTouchListener(new CircleTouchListener());
+
+
     }
 
     @Override
@@ -75,29 +79,33 @@ public class MainActivity extends AppActivity {
 
 
     private void displayRate() {
-        Log.d(LOGTAG, "Submit button");
-
+        Log.d(LOGTAG, "Display rate: " + currentRate);
+        for (int i = 0; i < stars.length; i++) {
+            Log.d(LOGTAG, "Setting display rate for " + i);
+            if (i < currentRate) {
+                stars[i].setImageResource(R.drawable.star_filled);
+            } else {
+                stars[i].setImageResource(R.drawable.star_empty);
+            }
+        }
     }
 
-    public void onClickStar1(View v) {
-        Log.d(LOGTAG, "Star button 1");
-        
-    }
-    public void onClickStar2(View v) {
-        Log.d(LOGTAG, "Star button 2");
-
-    }
-    public void onClickStar3(View v) {
-        Log.d(LOGTAG, "Star button 3");
-
-    }
-    public void onClickStar4(View v) {
-        Log.d(LOGTAG, "Star button 4");
-
-    }
-    public void onClickStar5(View v) {
-        Log.d(LOGTAG, "Star button 5");
-
+    public void onClickStar(View v) {
+        Log.d(LOGTAG, "Star button");
+        int clickedRate = 0;
+        for (ImageButton ib : stars) {
+            clickedRate++;
+            if (ib.equals(v)) {
+                Log.d(LOGTAG, "Clicked " + clickedRate);
+                break;
+            }
+        }
+        if (currentRate == clickedRate) {
+            currentRate = clickedRate - 1;
+        } else {
+            currentRate = clickedRate;
+        }
+        displayRate();
     }
 
     public void onClickSubmit(View v) {
