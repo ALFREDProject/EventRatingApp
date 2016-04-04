@@ -12,6 +12,7 @@ import java.util.Map;
 
 import alfred.eu.eventratingapp.actions.SubmitRatingForEvent;
 import eu.alfred.api.PersonalAssistantConnection;
+import eu.alfred.api.event.model.Event;
 import eu.alfred.api.event.webservice.RecommendationManager;
 import eu.alfred.ui.AppActivity;
 import eu.alfred.ui.CircleButton;
@@ -27,6 +28,8 @@ public class MainActivity extends AppActivity {
 
     private int currentRate = 3;
     private ImageButton[] stars;
+    private TextView textViewTitle;
+    private TextView textViewTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +60,12 @@ public class MainActivity extends AppActivity {
         stars[4] = (ImageButton) findViewById(R.id.imageButtonStar5);
         displayRate();
 
+        textViewTitle = (TextView) findViewById(R.id.textViewTitle);
+        textViewTime = (TextView) findViewById(R.id.textViewTime);
+
         //Alfred button
         circleButton = (CircleButton) findViewById(R.id.voiceControlBtn);
         circleButton.setOnTouchListener(new CircleTouchListener());
-
-
     }
 
     @Override
@@ -73,10 +77,13 @@ public class MainActivity extends AppActivity {
                 break;
             default:
                 break;
-
         }
     }
 
+    private void displayEvent(Event event) {
+        Log.d(LOGTAG, "Display event: " + event.toString());
+
+    }
 
     private void displayRate() {
         Log.d(LOGTAG, "Display rate: " + currentRate);
