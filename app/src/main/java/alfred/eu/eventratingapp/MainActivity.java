@@ -24,10 +24,9 @@ import java.util.Map;
 
 import alfred.eu.eventratingapp.actions.SubmitRatingForEvent;
 import eu.alfred.api.PersonalAssistantConnection;
-import eu.alfred.api.event.model.Event;
-import eu.alfred.api.event.recommendation.Eventrating;
-import eu.alfred.api.event.webservice.RecommendationManager;
 import eu.alfred.api.personalization.model.UserProfile;
+import eu.alfred.api.personalization.model.eventrecommendation.Event;
+import eu.alfred.api.personalization.model.eventrecommendation.Eventrating;
 import eu.alfred.api.personalization.webservice.PersonalizationManager;
 import eu.alfred.ui.AppActivity;
 import eu.alfred.ui.CircleButton;
@@ -39,7 +38,6 @@ public class MainActivity extends AppActivity {
     //Action
     private static final String SUBMIT_RATING = "SubmitRating";
 
-    private RecommendationManager recommendationManager;
     private PersonalizationManager personalizationManager;   //for UserProfile
     private Event currentEvent;
 
@@ -55,8 +53,11 @@ public class MainActivity extends AppActivity {
         personalAssistant.setOnPersonalAssistantConnectionListener(new PersonalAssistantConnection() {
             @Override
             public void OnConnected() {
-                recommendationManager = new RecommendationManager(personalAssistant.getMessenger());
-                personalizationManager = new PersonalizationManager();
+
+                //Some help here, to get the event and the userId to send the rating later
+
+                //RecommendationManager is not available
+                //recommendationManager = new RecommendationManager(personalAssistant.getMessenger());
 
                 onNewIntent(getIntent());
 
@@ -100,12 +101,28 @@ public class MainActivity extends AppActivity {
     public void performAction(String command, Map<String, String> map) {
         switch (command) {
             case (SUBMIT_RATING):
-                SubmitRatingForEvent srfe = new SubmitRatingForEvent(this, cade,recommendationManager);
+                // Somehow the eventId and the userId must be transfered to the action
+                SubmitRatingForEvent srfe = new SubmitRatingForEvent(this, cade); //,recommendationManager);
                 srfe.performAction(command, map);
                 break;
             default:
                 break;
         }
+    }
+
+    @Override
+    public void performWhQuery(String s, Map<String, String> map) {
+
+    }
+
+    @Override
+    public void performValidity(String s, Map<String, String> map) {
+
+    }
+
+    @Override
+    public void performEntityRecognizer(String s, Map<String, String> map) {
+
     }
 
 

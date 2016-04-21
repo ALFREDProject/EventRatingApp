@@ -9,36 +9,51 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 import alfred.eu.eventratingapp.MainActivity;
-import eu.alfred.api.event.model.Event;
-import eu.alfred.api.event.recommendation.Eventrating;
-import eu.alfred.api.event.webservice.RecommendationManager;
 import eu.alfred.api.personalization.model.UserProfile;
+import eu.alfred.api.personalization.model.eventrecommendation.Eventrating;
 import eu.alfred.api.proxies.interfaces.ICadeCommand;
 import eu.alfred.api.speech.Cade;
 
-/**
- * Created by Tobias on 12/02/2016.
- */
 public class SubmitRatingForEvent implements ICadeCommand {
-    MainActivity main;
-    Cade cade;
-    RecommendationManager recommendationManager;
 
-    public SubmitRatingForEvent(MainActivity main, Cade cade, RecommendationManager recommendationManager) {
+    private static final String LOGTAG = SubmitRatingForEvent.class.getSimpleName();
+    private static final String SUBMITRATING = "SubmitRating";
+
+
+    private MainActivity main;
+    private Cade cade;
+
+    public SubmitRatingForEvent(MainActivity main, Cade cade) {
         this.main = main;
         this.cade = cade;
-        this.recommendationManager = recommendationManager;
     }
 
     @Override
     public void performAction(String s, Map<String, String> map) {
-        //Log.i("EventRating-Log", map.get("SubmitRating"));
+        Log.i(LOGTAG, map.get(SUBMITRATING));
         //Receives JSON parameters to create recommendations answer
         Type responseType1 = new TypeToken<UserProfile>(){}.getType();
         UserProfile userProfile = (new Gson()).fromJson(map.get("userProfile"), responseType1);
         Type responseType2 = new TypeToken<Eventrating>(){}.getType();
         Eventrating eventrating = (new Gson()).fromJson(map.get("eventrating"), responseType2);
 
-        recommendationManager.createEventRecommendationAnswer(eventrating, userProfile);
+        //TODO somehow send the rating to the recommendation manager
+        //this is not available
+        //recommendationManager.createEventRecommendationAnswer(eventrating, userProfile);
+    }
+
+    @Override
+    public void performWhQuery(String s, Map<String, String> map) {
+
+    }
+
+    @Override
+    public void performValidity(String s, Map<String, String> map) {
+
+    }
+
+    @Override
+    public void performEntityRecognizer(String s, Map<String, String> map) {
+
     }
 }
