@@ -19,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -41,38 +42,48 @@ public class MainActivity extends AppActivity {
 
     //Action
     private static final String SUBMIT_RATING = "SubmitRating";
-    private List<String> eventIds = new ArrayList<>();
     private PersonalizationManager personalizationManager;   //for UserProfile
+    ArrayList<Event> eventsTobeRated = new ArrayList<>();
     private Event currentEvent;
     private int currentIndex = 0;
+    private Gson g = new Gson();
     private int currentRate = 3;
     private ImageButton[] stars;
     private TextView textViewTitle;
     private TextView textViewTime;
     private MainActivity instance;
 
+    private List<Event> jsonToEventList(String json)
+    {
+        Event[] events = g.fromJson(json,Event[].class);
+        return new ArrayList<>(Arrays.asList(events));
+    }
+    private String eventListToJson(ArrayList<Event> list)
+    {
+        return g.toJson(list);
+    }
+
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         instance = this;
-
-        globalSettings.getGlobalSettings(new GlobalSettingsResponse() {
-            @Override
-            public void OnSuccess(HashMap<String, Object> hashMap) {
-                Object o = hashMap.get(GlobalsettingsKeys.userEventsAccepted);
-                if(o!= null)
-                    eventIds  =(ArrayList<String>)o;
-                setView();
-            }
-            @Override
-            public void OnError(Exception e) {
-                e.printStackTrace();
-            }
-        });
+        try
+        {
+            eventsTobeRated = (ArrayList<Event>) jsonToEventList(prefs.getString(GlobalsettingsKeys.userEventsAccepted,""));
+            setView();
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
 
     private void setView() {
 
+        if(eventsTobeRated.size()!=0)
+        {
+            currentEvent = eventsTobeRated.get(0);
+        }
         currentEvent = new Event();
         currentEvent.setTitle("Test event");
         currentEvent.setStart_date(new Date());
@@ -107,7 +118,7 @@ public class MainActivity extends AppActivity {
         stars  = new ImageButton[5];
         TextView title = (TextView) findViewById(R.id.eventTitle);
         if(currentEvent!=null)
-        title.setText(currentEvent.getTitle());
+            title.setText(currentEvent.getTitle());
         else
             title.setText("Your event");
         stars[0] = (ImageButton) findViewById(R.id.imageButtonStar1);
