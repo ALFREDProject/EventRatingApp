@@ -16,8 +16,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Event rating app"
-        android:id="@+id/textView"
-        android:visibility="invisible" />
+        android:id="@+id/eventTitle"
+        android:visibility="visible" />
+
+
 
     <include layout="@layout/voice_btn_layout"
         android:visibility="visible"

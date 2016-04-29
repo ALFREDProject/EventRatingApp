@@ -18,15 +18,19 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import alfred.eu.eventratingapp.actions.SubmitRatingForEvent;
 import eu.alfred.api.PersonalAssistantConnection;
+import eu.alfred.api.globalSettings.responses.GlobalSettingsResponse;
 import eu.alfred.api.personalization.model.UserProfile;
 import eu.alfred.api.personalization.model.eventrecommendation.Event;
 import eu.alfred.api.personalization.model.eventrecommendation.Eventrating;
+import eu.alfred.api.personalization.model.eventrecommendation.GlobalsettingsKeys;
 import eu.alfred.api.personalization.webservice.PersonalizationManager;
 import eu.alfred.ui.AppActivity;
 import eu.alfred.ui.CircleButton;
@@ -37,32 +41,52 @@ public class MainActivity extends AppActivity {
 
     //Action
     private static final String SUBMIT_RATING = "SubmitRating";
-
+    private List<String> eventIds = new ArrayList<>();
     private PersonalizationManager personalizationManager;   //for UserProfile
     private Event currentEvent;
-
+    private int currentIndex = 0;
     private int currentRate = 3;
     private ImageButton[] stars;
     private TextView textViewTitle;
     private TextView textViewTime;
+    private MainActivity instance;
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        instance = this;
+
+        globalSettings.getGlobalSettings(new GlobalSettingsResponse() {
+            @Override
+            public void OnSuccess(HashMap<String, Object> hashMap) {
+                Object o = hashMap.get(GlobalsettingsKeys.userEventsAccepted);
+                if(o!= null)
+                    eventIds  =(ArrayList<String>)o;
+                setView();
+            }
+            @Override
+            public void OnError(Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void setView() {
+
+        currentEvent = new Event();
+        currentEvent.setTitle("Test event");
+        currentEvent.setStart_date(new Date());
+        displayEvent(currentEvent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        personalAssistant.setOnPersonalAssistantConnectionListener(new PersonalAssistantConnection() {
+        /*personalAssistant.setOnPersonalAssistantConnectionListener(new PersonalAssistantConnection() {
             @Override
             public void OnConnected() {
-
-                //Some help here, to get the event and the userId to send the rating later
-
-                //RecommendationManager is not available
-                //recommendationManager = new RecommendationManager(personalAssistant.getMessenger());
-
-                onNewIntent(getIntent());
-
-                //TODO
-                //How to get the event? Does it come from a notification?
+               onNewIntent(getIntent());
                 // *********** Simulated ****************
                 currentEvent = new Event();
                 currentEvent.setTitle("Test event");
@@ -70,18 +94,22 @@ public class MainActivity extends AppActivity {
                 displayEvent(currentEvent);
                 // **************************************
             }
-
             @Override
             public void OnDisconnected() {
                 // Do some cleanup stuff
             }
         });
-
+*/
         //GUI
         setContentView(alfred.eu.eventratingapp.R.layout.activity_main);
 
         //Stars buttons
         stars  = new ImageButton[5];
+        TextView title = (TextView) findViewById(R.id.eventTitle);
+        if(currentEvent!=null)
+        title.setText(currentEvent.getTitle());
+        else
+            title.setText("Your event");
         stars[0] = (ImageButton) findViewById(R.id.imageButtonStar1);
         stars[1] = (ImageButton) findViewById(R.id.imageButtonStar2);
         stars[2] = (ImageButton) findViewById(R.id.imageButtonStar3);
