@@ -6,10 +6,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,14 +19,10 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
-import alfred.eu.eventratingapp.actions.SubmitRatingForEvent;
 import eu.alfred.api.personalization.helper.eventrecommendation.EventHelper;
 import eu.alfred.api.personalization.helper.eventrecommendation.EventRatingTransfer;
-import eu.alfred.api.personalization.model.UserProfile;
 import eu.alfred.api.personalization.model.eventrecommendation.Event;
 import eu.alfred.api.personalization.model.eventrecommendation.Eventrating;
 import eu.alfred.api.personalization.model.eventrecommendation.GlobalsettingsKeys;
@@ -40,6 +36,7 @@ public class MainActivity extends AppActivity {
     private static final String LOGTAG = MainActivity.class.getSimpleName();
     private View noEvent;
     private View main;
+    private View loadingProgress;
     //Action
     private static final String SUBMIT_RATING = "SubmitRating";
     private PersonalizationManager personalizationManager;   //for UserProfile
@@ -59,8 +56,10 @@ public class MainActivity extends AppActivity {
         instance = this;
         try
         {
+            loadingProgress = findViewById(R.id.loadingAnimation);
             main = findViewById(R.id.viewMainRating);
             noEvent = findViewById(R.id.viewNoFurtherEvents);
+            loadingProgress.setVisibility(View.VISIBLE);
             getSharedPreferences("global_settings", MODE_ENABLE_WRITE_AHEAD_LOGGING);
             String json = prefs.getString(GlobalsettingsKeys.userEventsAccepted,"");
             eventsTobeRated = EventHelper.jsonToEventTransferList(json);
