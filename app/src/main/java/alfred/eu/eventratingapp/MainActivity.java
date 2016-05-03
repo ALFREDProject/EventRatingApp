@@ -36,7 +36,7 @@ public class MainActivity extends AppActivity {
     private static final String LOGTAG = MainActivity.class.getSimpleName();
     private View noEvent;
     private View main;
-    private View loadingProgress;
+
     //Action
     private static final String SUBMIT_RATING = "SubmitRating";
     private PersonalizationManager personalizationManager;   //for UserProfile
@@ -56,10 +56,10 @@ public class MainActivity extends AppActivity {
         instance = this;
         try
         {
-            loadingProgress = findViewById(R.id.loadingAnimation);
+
             main = findViewById(R.id.viewMainRating);
             noEvent = findViewById(R.id.viewNoFurtherEvents);
-            loadingProgress.setVisibility(View.VISIBLE);
+
             getSharedPreferences("global_settings", MODE_ENABLE_WRITE_AHEAD_LOGGING);
             String json = prefs.getString(GlobalsettingsKeys.userEventsAccepted,"");
             eventsTobeRated = EventHelper.jsonToEventTransferList(json);
@@ -118,17 +118,25 @@ public class MainActivity extends AppActivity {
         //Stars buttons
         stars  = new ImageButton[5];
         TextView title = (TextView) findViewById(R.id.eventTitle);
+
+        textViewTitle = (TextView) findViewById(R.id.textViewTitle);
+        textViewTime = (TextView) findViewById(R.id.textViewTime);
+       // TextView startDate = (TextView) findViewById(R.id.startDate);
+        //TextView endDate = (TextView) findViewById(R.id.endDate);
+
         if(currentEvent!=null)
+        {
+            textViewTitle.setText(currentEvent.getTitle());
             title.setText(currentEvent.getTitle());
+        //    startDate.setText(currentEvent.getStart_date().toString());
+         //   endDate.setText(currentEvent.getEnd_date().toString());
+        }
         stars[0] = (ImageButton) findViewById(R.id.imageButtonStar1);
         stars[1] = (ImageButton) findViewById(R.id.imageButtonStar2);
         stars[2] = (ImageButton) findViewById(R.id.imageButtonStar3);
         stars[3] = (ImageButton) findViewById(R.id.imageButtonStar4);
         stars[4] = (ImageButton) findViewById(R.id.imageButtonStar5);
         displayRate();
-
-        textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTime = (TextView) findViewById(R.id.textViewTime);
 
         //Alfred button
         circleButton = (CircleButton) findViewById(R.id.voiceControlBtn);

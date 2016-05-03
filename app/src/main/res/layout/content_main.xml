@@ -18,38 +18,41 @@
         android:text="Event rating app"
         android:id="@+id/eventTitle"
         android:visibility="visible" />
-
-
-
     <include layout="@layout/voice_btn_layout"
         android:visibility="visible"
         android:id="@+id/include" />
-
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="80dp"
-        android:id="@+id/linearLayout"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginTop="80dp"   android:id="@+id/linearLayoutDetails"
+        android:layout_marginLeft="10dp">
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView"
-            android:src="@drawable/recommendation_icon" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/textViewTitle"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"/>
-
+            android:id="@+id/linearLayoutDetailsContent">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView"
+                android:src="@drawable/recommendation_icon" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_gravity="center_vertical"
+                android:text="Titel: "
+                android:id="@+id/sss"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/textViewTitle"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"/>
+        </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,15 +62,47 @@
             android:layout_marginLeft="5dp"
             android:ellipsize="marquee"
             android:layout_marginTop="2dp"/>
+
+        <!--  <LinearLayout
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:id="@+id/linearLayoutDetailsStartDate">
+              <TextView
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="Start Date: "/>
+              <TextView
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/startDate"
+                  android:text=""/>
+          </LinearLayout>
+          <LinearLayout
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:id="@+id/linearLayoutDetailsEndDate">
+              <TextView
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="End Date: "/>
+              <TextView
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/endDate"
+                  android:text=""/>
+          </LinearLayout>-->
     </LinearLayout>
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/did_you_like"
         android:id="@+id/textViewDidYouLike"
-        android:layout_below="@+id/linearLayout"
         android:layout_centerHorizontal="true"
+        android:layout_below="@+id/linearLayoutDetails"
         android:layout_marginTop="24dp" />
 
     <LinearLayout
