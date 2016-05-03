@@ -1,6 +1,5 @@
 package alfred.eu.eventratingapp;
 
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,15 +18,12 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import alfred.eu.eventratingapp.actions.SubmitRatingForEvent;
-import eu.alfred.api.PersonalAssistantConnection;
-import eu.alfred.api.globalSettings.responses.GlobalSettingsResponse;
+import eu.alfred.api.personalization.helper.eventrecommendation.EventHelper;
 import eu.alfred.api.personalization.model.UserProfile;
 import eu.alfred.api.personalization.model.eventrecommendation.Event;
 import eu.alfred.api.personalization.model.eventrecommendation.Eventrating;
@@ -35,6 +31,7 @@ import eu.alfred.api.personalization.model.eventrecommendation.GlobalsettingsKey
 import eu.alfred.api.personalization.webservice.PersonalizationManager;
 import eu.alfred.ui.AppActivity;
 import eu.alfred.ui.CircleButton;
+
 
 public class MainActivity extends AppActivity {
 
@@ -53,23 +50,13 @@ public class MainActivity extends AppActivity {
     private TextView textViewTime;
     private MainActivity instance;
 
-    private List<Event> jsonToEventList(String json)
-    {
-        Event[] events = g.fromJson(json,Event[].class);
-        return new ArrayList<>(Arrays.asList(events));
-    }
-    private String eventListToJson(ArrayList<Event> list)
-    {
-        return g.toJson(list);
-    }
-
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         instance = this;
         try
         {
-            eventsTobeRated = (ArrayList<Event>) jsonToEventList(prefs.getString(GlobalsettingsKeys.userEventsAccepted,""));
+            eventsTobeRated = (ArrayList<Event>) EventHelper.jsonToEventList(prefs.getString(GlobalsettingsKeys.userEventsAccepted,""));
             setView();
         }
         catch (Exception ex)
@@ -82,7 +69,8 @@ public class MainActivity extends AppActivity {
 
         if(eventsTobeRated.size()!=0)
         {
-            currentEvent = eventsTobeRated.get(0);
+            currentEvent = eventsTobeRated.get(currentIndex);
+            currentIndex++;
         }
         currentEvent = new Event();
         currentEvent.setTitle("Test event");
@@ -93,24 +81,6 @@ public class MainActivity extends AppActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        /*personalAssistant.setOnPersonalAssistantConnectionListener(new PersonalAssistantConnection() {
-            @Override
-            public void OnConnected() {
-               onNewIntent(getIntent());
-                // *********** Simulated ****************
-                currentEvent = new Event();
-                currentEvent.setTitle("Test event");
-                currentEvent.setStart_date(new Date());
-                displayEvent(currentEvent);
-                // **************************************
-            }
-            @Override
-            public void OnDisconnected() {
-                // Do some cleanup stuff
-            }
-        });
-*/
         //GUI
         setContentView(alfred.eu.eventratingapp.R.layout.activity_main);
 
@@ -119,8 +89,6 @@ public class MainActivity extends AppActivity {
         TextView title = (TextView) findViewById(R.id.eventTitle);
         if(currentEvent!=null)
             title.setText(currentEvent.getTitle());
-        else
-            title.setText("Your event");
         stars[0] = (ImageButton) findViewById(R.id.imageButtonStar1);
         stars[1] = (ImageButton) findViewById(R.id.imageButtonStar2);
         stars[2] = (ImageButton) findViewById(R.id.imageButtonStar3);
@@ -222,7 +190,13 @@ public class MainActivity extends AppActivity {
         map.put("userProfile", (new Gson()).toJson(userProfile));
         map.put("eventrating", (new Gson()).toJson(eventrating));
 
+        loadNextEvent();
+        currentIndex++;
         performAction(SUBMIT_RATING, map);
+    }
+
+    private void loadNextEvent() {
+        setView();
     }
 
     public void onClickCancel(View v) {
