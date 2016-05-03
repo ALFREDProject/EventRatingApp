@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 import alfred.eu.eventratingapp.actions.SubmitRatingForEvent;
 import eu.alfred.api.personalization.helper.eventrecommendation.EventHelper;
+import eu.alfred.api.personalization.helper.eventrecommendation.EventRatingTransfer;
 import eu.alfred.api.personalization.model.UserProfile;
 import eu.alfred.api.personalization.model.eventrecommendation.Event;
 import eu.alfred.api.personalization.model.eventrecommendation.Eventrating;
@@ -36,12 +38,13 @@ import eu.alfred.ui.CircleButton;
 public class MainActivity extends AppActivity {
 
     private static final String LOGTAG = MainActivity.class.getSimpleName();
-
+    private View noEvent;
+    private View main;
     //Action
     private static final String SUBMIT_RATING = "SubmitRating";
     private PersonalizationManager personalizationManager;   //for UserProfile
-    ArrayList<Event> eventsTobeRated = new ArrayList<>();
-    private Event currentEvent;
+    ArrayList<EventRatingTransfer> eventsTobeRated = new ArrayList<>();
+    private EventRatingTransfer currentEvent;
     private int currentIndex = 0;
     private Gson g = new Gson();
     private int currentRate = 3;
@@ -56,7 +59,11 @@ public class MainActivity extends AppActivity {
         instance = this;
         try
         {
-            eventsTobeRated = (ArrayList<Event>) EventHelper.jsonToEventList(prefs.getString(GlobalsettingsKeys.userEventsAccepted,""));
+            main = findViewById(R.id.viewMainRating);
+            noEvent = findViewById(R.id.viewNoFurtherEvents);
+            getSharedPreferences("global_settings", MODE_ENABLE_WRITE_AHEAD_LOGGING);
+            String json = prefs.getString(GlobalsettingsKeys.userEventsAccepted,"");
+            eventsTobeRated = EventHelper.jsonToEventTransferList(json);
             setView();
         }
         catch (Exception ex)
@@ -66,22 +73,47 @@ public class MainActivity extends AppActivity {
     }
 
     private void setView() {
-
-        if(eventsTobeRated.size()!=0)
+        try
         {
-            currentEvent = eventsTobeRated.get(currentIndex);
-            currentIndex++;
+            if(eventsTobeRated.size()!=0)
+            {
+                if(currentIndex!=eventsTobeRated.size()) {
+                    currentEvent = eventsTobeRated.get(currentIndex);
+                    currentIndex++;
+
+                    main.setVisibility(View.VISIBLE);
+                    noEvent.setVisibility(View.INVISIBLE);
+                    displayEvent(currentEvent);
+                }
+            }
+            else
+            {
+                main.setVisibility(View.INVISIBLE);
+                noEvent.setVisibility(View.VISIBLE);
+            }
         }
-        currentEvent = new Event();
-        currentEvent.setTitle("Test event");
-        currentEvent.setStart_date(new Date());
-        displayEvent(currentEvent);
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        noEventsAvailable();
+    }
+
+    private void noEventsAvailable() {
+
+        main.setVisibility(View.INVISIBLE);
+        noEvent.setVisibility(View.VISIBLE);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //GUI
+        onCreateBuildGui();
+    }
+
+    private void onCreateBuildGui()
+    {
         setContentView(alfred.eu.eventratingapp.R.layout.activity_main);
 
         //Stars buttons
@@ -109,8 +141,8 @@ public class MainActivity extends AppActivity {
         switch (command) {
             case (SUBMIT_RATING):
                 // Somehow the eventId and the userId must be transfered to the action
-                SubmitRatingForEvent srfe = new SubmitRatingForEvent(this, cade); //,recommendationManager);
-                srfe.performAction(command, map);
+              /*  SubmitRatingForEvent srfe = new SubmitRatingForEvent(this, cade); //,recommendationManager);
+                srfe.performAction(command, map);*/
                 break;
             default:
                 break;
@@ -133,7 +165,7 @@ public class MainActivity extends AppActivity {
     }
 
 
-    private void displayEvent(Event event) {
+    private void displayEvent(EventRatingTransfer event) {
         Log.d(LOGTAG, "Display event: " + event.getTitle());
 
         textViewTitle.setText(event.getTitle());
@@ -142,6 +174,7 @@ public class MainActivity extends AppActivity {
         // - tomorrow
         // - 16 april...
         textViewTime.setText(DateFormat.getDateTimeInstance().format(event.getStart_date()));
+        onCreateBuildGui();
     }
 
 
@@ -176,23 +209,19 @@ public class MainActivity extends AppActivity {
     }
 
     public void onClickSubmit(View v) {
-        Log.d(LOGTAG, "Submit button");
+        Log.d(LOGTAG, "Submit button");//TODO Webservice call here
         Toast.makeText(MainActivity.this, "Submit", Toast.LENGTH_SHORT).show();
-        Map<String, String> map = new HashMap<>();
 
-        //TODO get the correct userProfile
-        //UserProfile userProfile = personalizationManager.retrieveUserProfile(userId).get(0);
-        UserProfile userProfile = new UserProfile();
 
-        Eventrating eventrating = new Eventrating();
-        eventrating.setRating(currentRate);
 
-        map.put("userProfile", (new Gson()).toJson(userProfile));
-        map.put("eventrating", (new Gson()).toJson(eventrating));
+        Eventrating r = new Eventrating(true,currentRate,currentEvent.getEventID());
+        eventrecommendationManager.submitRating(r);
 
-        loadNextEvent();
         currentIndex++;
-        performAction(SUBMIT_RATING, map);
+        if(eventsTobeRated.size()==currentIndex)
+            noEventsAvailable();
+        else
+            loadNextEvent();
     }
 
     private void loadNextEvent() {
@@ -217,9 +246,9 @@ public class MainActivity extends AppActivity {
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, Intent intent) {//Probably wrong
             Type responseType = new TypeToken<Event>(){}.getType();
-            displayEvent((Event) (new Gson()).fromJson(intent.getStringExtra("event"), responseType) );
+            displayEvent((EventRatingTransfer) (new Gson()).fromJson(intent.getStringExtra("event"), responseType) );
         }
     };
 }
