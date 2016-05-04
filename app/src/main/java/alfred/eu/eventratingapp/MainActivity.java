@@ -128,8 +128,6 @@ public class MainActivity extends AppActivity {
         {
             textViewTitle.setText(currentEvent.getTitle());
             title.setText(currentEvent.getTitle());
-        //    startDate.setText(currentEvent.getStart_date().toString());
-         //   endDate.setText(currentEvent.getEnd_date().toString());
         }
         stars[0] = (ImageButton) findViewById(R.id.imageButtonStar1);
         stars[1] = (ImageButton) findViewById(R.id.imageButtonStar2);
