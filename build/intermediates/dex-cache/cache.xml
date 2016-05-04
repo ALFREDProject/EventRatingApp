@@ -1,3 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" />
+<items version="2" >
 
+    <item
+        jar="C:\Users\thardes\Documents\alfred\eventratingapp\app\build\intermediates\exploded-aar\eu.alfred.personalassistant.sharedlibrary\PersonalAssistantShared-debug\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="1dce39b4c1e4a81ff5db586b0486a74ecf1d2bbf">
+        <dex dex="C:\Users\thardes\Documents\alfred\eventratingapp\app\build\intermediates\transforms\dex\debug\folders\1000\10\exploded-aar-eu.alfred.personalassistant.sharedlibrary-PersonalAssistantShared-debug_2216c56b6a9890e8575e7decdefe68fef23c9e68\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\thardes\Documents\alfred\eventratingapp\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="23.0.1"
+        sha1="6f104b9a3cec86e82aee798d79911efa47e19176">
+        <dex dex="C:\Users\thardes\Documents\alfred\eventratingapp\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_09bb8baca54a59bf016d9ec83a3ea2aa6945007d\classes.dex" />
+    </item>
+
+</items>
