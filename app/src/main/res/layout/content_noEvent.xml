@@ -10,8 +10,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="alfred.eu.eventratingapp.MainActivity"
     tools:showIn="@layout/activity_main">
-
+    <!--asdlkjasdlkjaslkj-->
 <TextView android:layout_width="match_parent" android:layout_height="match_parent"
     android:text="No further events available" />
-
 </LinearLayout>
