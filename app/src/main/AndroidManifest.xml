@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="alfred.eu.eventratingapp"
     android:versionCode="19"
-    android:versionName="1.0.19" >
+    android:versionName="19.0" >
 
     <application
         android:allowBackup="true"
