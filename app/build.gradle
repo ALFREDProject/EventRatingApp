@@ -8,8 +8,8 @@ android {
         applicationId "alfred.eu.eventratingapp"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 20
-        versionName "1.0.20"
+        versionCode 22
+        versionName "1.0.22"
     }
     buildTypes {
         release {
