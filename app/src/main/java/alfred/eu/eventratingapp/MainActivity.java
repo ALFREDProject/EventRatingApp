@@ -87,21 +87,25 @@ public class MainActivity extends AppActivity {
             }
             else
             {
-                main.setVisibility(View.INVISIBLE);
-                noEvent.setVisibility(View.VISIBLE);
+                noEventsAvailable();
             }
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
-        noEventsAvailable();
     }
 
     private void noEventsAvailable() {
 
-        main.setVisibility(View.INVISIBLE);
-        noEvent.setVisibility(View.VISIBLE);
+       runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                findViewById(R.id.viewMainRating).setVisibility(View.INVISIBLE);
+                findViewById(R.id.viewNoFurtherEvents).setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override
@@ -223,7 +227,7 @@ public class MainActivity extends AppActivity {
         eventrecommendationManager.submitRating(r);
 
         currentIndex++;
-        if(eventsTobeRated.size()==currentIndex)
+        if(eventsTobeRated.size()<currentIndex)
             noEventsAvailable();
         else
             loadNextEvent();
