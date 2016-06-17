@@ -28,6 +28,7 @@ import eu.alfred.api.personalization.model.eventrecommendation.Eventrating;
 import eu.alfred.api.personalization.model.eventrecommendation.GlobalsettingsKeys;
 import eu.alfred.api.personalization.webservice.PersonalizationManager;
 import eu.alfred.ui.AppActivity;
+import eu.alfred.ui.BackToPAButton;
 import eu.alfred.ui.CircleButton;
 
 
@@ -140,9 +141,12 @@ public class MainActivity extends AppActivity {
         stars[4] = (ImageButton) findViewById(R.id.imageButtonStar5);
         displayRate();
 
-        //Alfred button
+        //Alfred buttons
         circleButton = (CircleButton) findViewById(R.id.voiceControlBtn);
-        circleButton.setOnTouchListener(new CircleTouchListener());
+        circleButton.setOnTouchListener(new MicrophoneTouchListener());
+
+        backToPAButton = (BackToPAButton) findViewById(R.id.backControlBtn);
+        backToPAButton.setOnTouchListener(new BackTouchListener());
     }
 
     @Override
