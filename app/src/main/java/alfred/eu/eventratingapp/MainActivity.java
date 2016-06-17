@@ -1,7 +1,9 @@
 package alfred.eu.eventratingapp;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -50,6 +52,7 @@ public class MainActivity extends AppActivity {
     private TextView textViewTitle;
     private TextView textViewTime;
     private MainActivity instance;
+    private String userId;
 
     @Override
     public void onNewIntent(Intent intent) {
@@ -57,14 +60,39 @@ public class MainActivity extends AppActivity {
         instance = this;
         try
         {
-
-            main = findViewById(R.id.viewMainRating);
-            noEvent = findViewById(R.id.viewNoFurtherEvents);
-
             getSharedPreferences("global_settings", MODE_ENABLE_WRITE_AHEAD_LOGGING);
-            String json = prefs.getString(GlobalsettingsKeys.userEventsAccepted,"");
-            eventsTobeRated = EventHelper.jsonToEventTransferList(json);
-            setView();
+            String userId = prefs.getString(GlobalsettingsKeys.userId,"");
+            this.userId = "573043c7e4b0bd6603c8a9fe";//TODO Remove this shit
+            if(userId=="")
+            {
+                new AlertDialog.Builder(this)
+                        .setTitle("Not logged in")
+                        .setMessage("Please login to use eventrecommendations by using the ProfileEditorApp")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                System.exit(0);
+                            }
+                        })
+
+                    /*.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })*/
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+            else
+            {
+
+                main = findViewById(R.id.viewMainRating);
+                noEvent = findViewById(R.id.viewNoFurtherEvents);
+
+                getSharedPreferences("global_settings", MODE_ENABLE_WRITE_AHEAD_LOGGING);
+                String json = prefs.getString(GlobalsettingsKeys.userEventsAccepted,"");
+                eventsTobeRated = EventHelper.jsonToEventTransferList(json);
+                setView();
+            }
         }
         catch (Exception ex)
         {
@@ -99,7 +127,7 @@ public class MainActivity extends AppActivity {
 
     private void noEventsAvailable() {
 
-       runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
 
             @Override
             public void run() {
@@ -126,7 +154,7 @@ public class MainActivity extends AppActivity {
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         textViewTime = (TextView) findViewById(R.id.textViewTime);
-       // TextView startDate = (TextView) findViewById(R.id.startDate);
+        // TextView startDate = (TextView) findViewById(R.id.startDate);
         //TextView endDate = (TextView) findViewById(R.id.endDate);
 
         if(currentEvent!=null)
@@ -227,7 +255,7 @@ public class MainActivity extends AppActivity {
 
 
 
-        Eventrating r = new Eventrating(true,currentRate,currentEvent.getEventID());
+        Eventrating r = new Eventrating(true,currentRate,currentEvent.getEventID(),this.userId);
         eventrecommendationManager.submitRating(r);
 
         currentIndex++;
