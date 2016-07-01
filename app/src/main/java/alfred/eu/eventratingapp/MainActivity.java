@@ -61,8 +61,7 @@ public class MainActivity extends AppActivity {
         try
         {
             getSharedPreferences("global_settings", MODE_ENABLE_WRITE_AHEAD_LOGGING);
-            String userId = prefs.getString(GlobalsettingsKeys.userId,"");
-            this.userId = "573043c7e4b0bd6603c8a9fe";//TODO Remove this shit
+            this.userId  = prefs.getString(GlobalsettingsKeys.userId,"");
             if(userId=="")
             {
                 new AlertDialog.Builder(this)
@@ -180,10 +179,9 @@ public class MainActivity extends AppActivity {
     @Override
     public void performAction(String command, Map<String, String> map) {
         switch (command) {
-            case (SUBMIT_RATING):
-                // Somehow the eventId and the userId must be transfered to the action
-              /*  SubmitRatingForEvent srfe = new SubmitRatingForEvent(this, cade); //,recommendationManager);
-                srfe.performAction(command, map);*/
+            case ("RateEventAction"):
+                this.currentRate = Integer.parseInt(map.get("selected_stars_size").replace("stars_size_",""));
+                this.displayRate();
                 break;
             default:
                 break;
