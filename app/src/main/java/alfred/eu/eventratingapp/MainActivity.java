@@ -104,7 +104,7 @@ public class MainActivity extends AppActivity {
         {
             if(eventsTobeRated.size()!=0)
             {
-                if(currentIndex!=eventsTobeRated.size()) {
+                if(currentIndex<=eventsTobeRated.size()) {
                     currentEvent = eventsTobeRated.get(currentIndex);
                     currentIndex++;
 
@@ -256,7 +256,7 @@ public class MainActivity extends AppActivity {
         Eventrating r = new Eventrating(true,currentRate,currentEvent.getEventID(),this.userId);
         eventrecommendationManager.submitRating(r);
 
-        currentIndex++;
+        //currentIndex++;
         if(eventsTobeRated.size()<currentIndex)
             noEventsAvailable();
         else
